@@ -1,0 +1,28 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- "shadow" -->
+    <!-- <item>
+        <bitmap android:src="@drawable/card_shadow" >
+        </bitmap>
+    </item> -->
+    <item >
+        <shape
+            android:dither="true"
+            android:shape="rectangle" >
+            <corners android:radius="0dp" />
+
+            <gradient android:startColor="@color/background_grey_top" android:endColor="@color/background_grey_bottom" android:angle="270" />
+
+            <stroke
+                android:width="0px"
+                android:color="#dddddd" />
+
+            <padding
+                android:bottom="0dp"
+                android:left="5dp"
+                android:right="5dp"
+                android:top="0dp" />
+        </shape>
+    </item>
+
+</layer-list>

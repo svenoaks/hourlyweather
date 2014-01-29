@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_weight="1"
+    android:paddingTop="1dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:layout_height="match_parent"
+   
+    android:orientation="vertical"
+    android:background="@drawable/card" >
+
+    <TextView
+        android:id="@+id/time"
+        style="@style/CardText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="8am"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        android:src="@drawable/rain" />
+
+    <TextView
+        android:id="@+id/data_option_one"
+        style="@style/CardText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="E"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/data_option_two"
+        style="@style/CardText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="E"
+        android:textSize="12sp" />
+
+</LinearLayout>
+

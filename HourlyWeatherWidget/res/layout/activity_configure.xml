@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_alignParentBottom="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-7592316401695950/8068502623"
+        ads:loadAdOnCreate="true"
+        ads:testDevices="TEST_EMULATOR, C6D90FEDCA2E50BFACEFDA3380DD4EA2" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/adView"
+        
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+android:id/title"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_marginTop="@dimen/bottom_spacing"
+                android:text="Location" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/bottom_spacing"
+                >
+
+                <EditText
+                    android:id="@+id/location_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bottom_spacing"
+                    android:hint="Zip or City, State/Country" />
+
+                <CheckBox
+                    android:id="@+id/check"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bottom_spacing"
+                    android:onClick="checkClick"
+                    android:text="Use my location" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+android:id/title"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:text="Units" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bottom_spacing"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/faren_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="Farenheit" />
+
+                <RadioButton
+                    android:id="@+id/celsius_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_weight="0.6"
+                    android:text="Celsius" />
+            </RadioGroup>
+
+           
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/bottom_spacing"
+                
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/mph_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:text="Miles/Hour" />
+
+                <RadioButton
+                    android:id="@+id/kph_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_weight="0.6"
+                    android:text="Kilometers/Hour" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+android:id/title"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:text="FORECASTS SHOWN" />
+
+            <Spinner
+                android:id="@+id/data_option_one_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bottom_spacing" />
+
+            <Spinner
+                android:id="@+id/data_option_two_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/bottom_spacing"/>
+            <TextView
+                android:id="@+android:id/title"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:text="Data update frequency" />
+            <Spinner
+                android:id="@+id/update_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/bottom_spacing" />
+        </LinearLayout>
+        
+    </ScrollView>
+
+</RelativeLayout>

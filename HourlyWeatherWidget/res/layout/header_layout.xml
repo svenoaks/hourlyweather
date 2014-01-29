@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.57"
+            android:textColor="@color/dark_grey"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/forecast_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.43"
+            android:gravity="right"
+            android:text="Powered by Forecast"
+            android:textColor="@color/dark_grey"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</FrameLayout>
