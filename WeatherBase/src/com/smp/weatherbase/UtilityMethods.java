@@ -315,11 +315,11 @@ public class UtilityMethods
 			location = getLocationFromLocationManager(context);
 			writeLatLongFromLocation(location, context);
 		}
-		/*else
+		if (location == null)
 		{
-			Toast.makeText(context, "You must have location access enabled and be online", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "You must have location access enabled and be online.", Toast.LENGTH_SHORT).show();
 			return false;
-		}*/
+		}
 		return true;
 	}
 	private static Location getLocationFromLocationClient(LocationClient locationClient)
