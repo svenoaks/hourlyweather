@@ -301,7 +301,7 @@ public class UtilityMethods
 	}
 	public static void makeNoConnectionToast(Context context)
 	{
-		Toast.makeText(context, "Problem connecting to services.", Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, "Problem connecting to services - you must be online.", Toast.LENGTH_SHORT).show();
 	}
 	public static boolean writeCurrentLocation(LocationClient locationClient, Context context)
 	{
@@ -313,11 +313,14 @@ public class UtilityMethods
 		else
 		{
 			location = getLocationFromLocationManager(context);
+		}
+		if (location != null)
+		{
 			writeLatLongFromLocation(location, context);
 		}
-		if (location == null)
+		else
 		{
-			Toast.makeText(context, "You must have location access enabled and be online.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "You must have location access enabled and be online for Hourly Weather Widget to update. Go to Settings - Location.", Toast.LENGTH_LONG).show();
 			return false;
 		}
 		return true;
