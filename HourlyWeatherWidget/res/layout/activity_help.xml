@@ -58,14 +58,30 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="Time indicators are in device local time." />
-
+            
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_weight="1"
-                android:scaleType="fitStart"
+                android:scaleType="fitCenter"
                 android:src="@drawable/help" />
+            
+            <TextView
+                style="”?android:attr/listSeparatorTextViewStyle”"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:gravity="left"
+                android:text="LOCATION (USE MY LOCATION)"
+                android:textAllCaps="true"
+                android:textStyle="bold" />
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Please enable location access from both GPS and network for the most accurate results. In order to conserve battery power, Hourly Weather Widget uses passive methods of determining location. In very rare cases your location may not be present, this should resolve itself by enabling location access and waiting a few minutes.\n\nCurrently, Use my Location only works on devices with Google Play Services installed (the vast majority)." />
+
         </LinearLayout>
     </ScrollView>
 

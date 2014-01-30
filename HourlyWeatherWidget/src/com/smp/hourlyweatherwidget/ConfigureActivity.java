@@ -74,7 +74,7 @@ public class ConfigureActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		Log.i("compare", "onCreate");
+		// Log.i("compare", "onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_configure);
 		getWindow().setSoftInputMode(
@@ -170,6 +170,12 @@ public class ConfigureActivity extends FragmentActivity implements
 
 	public void onCheck()
 	{
+		putPreferences();
+		processLocation();
+	}
+
+	public void putPreferences()
+	{
 		SharedPreferences pref = getPref(this);
 		SharedPreferences.Editor ed = pref.edit();
 		ed.putBoolean(FARENHEIGHT, fButton.isChecked());
@@ -180,7 +186,70 @@ public class ConfigureActivity extends FragmentActivity implements
 		boolean battery = updateSpinner.getSelectedItemPosition() == 1;
 		ed.putBoolean(OPTION_BATTERY, battery);
 		ed.commit();
+	}
+
+	public void reverseGeocodeText()
+	{
 		String latitude = null, longitude = null, location = "Location: ";
+		String locationEntered = locationText.getText().toString();
+		if (locationEntered.length() == 0)
+		{
+			Toast.makeText(this, "No location entered", Toast.LENGTH_SHORT)
+					.show();
+			return;
+		}
+		Geocoder geo = new Geocoder(this);
+		Address addy = null;
+		if (isOnline(this))
+		{
+			try
+			{	
+				List<Address> adds = geo.getFromLocationName(
+						locationEntered, 1);
+				if (adds != null && adds.size() > 0)
+					addy = adds.get(0);
+			}
+			catch (IOException e)
+			{
+				addy = getLocationInfo(locationEntered);
+				e.printStackTrace();
+				// return;
+			}
+		}
+		else
+		{
+			makeNoConnectionToast(this);
+			return;
+		}
+
+		if (addy != null)
+		{
+			latitude = String.valueOf(addy.getLatitude());
+			longitude = String.valueOf(addy.getLongitude());
+			boolean valid = latitude != null && longitude != null;
+			// if (valid && addy.getSubLocality() != null)
+			// location = addy.getSubLocality();
+			if (valid && ((location = getLocationString(addy)) != null))
+				;
+			else
+			{
+				makeCouldntGeocodeToast();
+				return;
+			}
+		}
+		else
+		{
+			makeCouldntGeocodeToast();
+			return;
+		}
+
+		// write lat, long not using user's location.
+		writeLatLong(latitude, longitude, location, false, this);
+		updateWidgetAndQuit();
+	}
+
+	public void processLocation()
+	{
 		if (myLocationCheckBox.isChecked())
 		{
 			if (servicesConnected())
@@ -191,68 +260,14 @@ public class ConfigureActivity extends FragmentActivity implements
 			}
 			else
 			{
-				makeLocationToast();
+				makeNoLocationToast();
 				return;
 			}
 		}
 		else
 		{
-			String locationEntered = locationText.getText().toString();
-			if (locationEntered.length() == 0)
-			{
-				Toast.makeText(this, "No location entered", Toast.LENGTH_SHORT)
-						.show();
-				return;
-			}
-			Geocoder geo = new Geocoder(this);
-			Address addy = null;
-			if (isOnline(this))
-			{
-				try
-				{
-					List<Address> adds = geo.getFromLocationName(
-							locationEntered, 1);
-					if (adds != null && adds.size() > 0)
-						addy = adds.get(0);
-				}
-				catch (IOException e)
-				{
-					addy = getLocationInfo(locationEntered);
-					e.printStackTrace();
-					// return;
-				}
-			}
-			else
-			{
-				makeNoConnectionToast(this);
-				return;
-			}
-
-			if (addy != null)
-			{
-				latitude = String.valueOf(addy.getLatitude());
-				longitude = String.valueOf(addy.getLongitude());
-				boolean valid = latitude != null && longitude != null;
-				// if (valid && addy.getSubLocality() != null)
-				// location = addy.getSubLocality();
-				if (valid && ((location = getLocationString(addy)) != null))
-					;
-				else
-				{
-					makeLocationToast();
-					return;
-				}
-			}
-			else
-			{
-				makeLocationToast();
-				return;
-			}
-
+			reverseGeocodeText();
 		}
-		// write lat, long not using user's location.
-		writeLatLong(latitude, longitude, location, false, this);
-		updateWidgetAndQuit();
 	}
 
 	private void updateWidgetAndQuit()
@@ -277,7 +292,7 @@ public class ConfigureActivity extends FragmentActivity implements
 		if (ConnectionResult.SUCCESS == resultCode)
 		{
 			// In debug mode, log the status
-			Log.d("Location Updates", "Google Play services is available.");
+			// Log.d("Location Updates", "Google Play services is available.");
 			// Continue
 			return true;
 			// Google Play services was not available for some reason
@@ -305,12 +320,16 @@ public class ConfigureActivity extends FragmentActivity implements
 		}
 	}
 
-	private void makeLocationToast()
+	private void makeNoLocationToast()
 	{
-		Toast.makeText(this, "The location could not be determined",
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Location could not be determined. Type your city in the text box.",
+				Toast.LENGTH_LONG).show();
 	}
-
+	private void makeCouldntGeocodeToast()
+	{
+		Toast.makeText(this, "Couldn't determine location. An unknown error has occured.",
+				Toast.LENGTH_LONG).show();
+	}
 	public void checkClick(View view)
 	{
 		if (myLocationCheckBox.isChecked())
@@ -377,6 +396,9 @@ public class ConfigureActivity extends FragmentActivity implements
 			case R.id.action_update:
 				onCheck();
 				break;
+			case R.id.help:
+				Intent intent = new Intent(this, HelpActivity.class);
+				startActivity(intent);
 		}
 		return true;
 	}

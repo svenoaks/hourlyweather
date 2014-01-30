@@ -39,7 +39,7 @@ public class WidgetProvider extends AppWidgetProvider
 	@Override
 	public void onDisabled(Context context)
 	{
-		Log.i("compare", "on disabled");
+		//Log.i("compare", "on disabled");
 		super.onDisabled(context);
 	}
 
@@ -47,24 +47,24 @@ public class WidgetProvider extends AppWidgetProvider
 	public void onEnabled(Context context)
 	{
 
-		Log.i("compare", "on enabled");
+		//Log.i("compare", "on enabled");
 		super.onEnabled(context);
 	}
 
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-		Log.i("compare", "on receive");
+		//Log.i("compare", "on receive");
 		super.onReceive(context, intent);
 	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
 	{
-		Log.i("compare", "on update");
+		//Log.i("compare", "on update");
 		if (!configureUpdate)
 		{
-			Log.i("compare", "updating from on update");
+			//Log.i("compare", "updating from on update");
 			context.startService(new Intent(context, UpdateService.class));
 		}
 		configureUpdate = false;

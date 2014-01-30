@@ -145,7 +145,7 @@ public class UpdateService extends IntentService implements GooglePlayServicesCl
 		}
 		if (newData != null)
 		{
-			Log.d("NEWDATA", "LOOK AT TIME STUPID");
+			//Log.d("NEWDATA", "LOOK AT TIME STUPID");
 			Editor ed = pref.edit();
 			ed.putLong(PREF_LAST_UPDATE_TIME, System.currentTimeMillis());
 			ed.commit();
@@ -451,6 +451,7 @@ public class UpdateService extends IntentService implements GooglePlayServicesCl
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			Log.e("Response error", e.toString());
 		}
 		finally

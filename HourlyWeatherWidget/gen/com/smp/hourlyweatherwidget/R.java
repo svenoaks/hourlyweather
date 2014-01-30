@@ -409,6 +409,7 @@ containing a value of this type.
         public static final int faren_button=0x7f080009;
         public static final int forecast_dummy=0x7f08001c;
         public static final int forecast_text=0x7f080014;
+        public static final int help=0x7f080020;
         public static final int horizontal_layout=0x7f08001e;
         public static final int hour_divider=0x7f080019;
         public static final int hybrid=0x7f080004;
