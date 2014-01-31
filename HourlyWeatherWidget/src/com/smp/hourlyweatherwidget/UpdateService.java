@@ -76,7 +76,27 @@ public class UpdateService extends IntentService implements GooglePlayServicesCl
 		writeCurrentLocation(locationClient, this);
 		gPlayServicesLatch.countDown();
 	}
-	
+	private boolean shouldUpdate(Context context, SharedPreferences pref, boolean fromActivity)
+	{
+		boolean shouldUpdate = false;
+		boolean battery = pref.getBoolean(OPTION_BATTERY, true);
+		
+		if (battery && !fromActivity)
+		{
+			long thisTime = System.currentTimeMillis();
+			long lastTime = pref.getLong(PREF_LAST_UPDATE_TIME, ERROR_CODE);
+			long timeElapsed = thisTime - lastTime;
+			if (lastTime == ERROR_CODE || timeElapsed > MINIMUM_UPDATE_MS_BATTERY)
+			{
+				shouldUpdate = true;
+			}
+		}
+		else
+		{
+			shouldUpdate = true;
+		}
+		return shouldUpdate;
+	}
 	@SuppressLint("InlinedApi")
 	@Override
 	public void onHandleIntent(Intent intent)
@@ -92,7 +112,10 @@ public class UpdateService extends IntentService implements GooglePlayServicesCl
 		boolean useLocation = pref.getBoolean(USE_LOCATION, false);
 		boolean justDetermined = intent.getBooleanExtra(LOCATION_JUST_DETERMINED, false);
 		boolean fromActivity = intent.getBooleanExtra(FROM_CONFIGURE_ACTIVITY, false);
-		if (useLocation && !justDetermined)
+		
+		boolean shouldUpdate = shouldUpdate(this, pref, fromActivity);
+		
+		if (useLocation && shouldUpdate && !justDetermined )
 		{
 			gPlayServicesLatch = new CountDownLatch(1);
 			locationClient = new LocationClient(this, this, this);
@@ -114,24 +137,7 @@ public class UpdateService extends IntentService implements GooglePlayServicesCl
 		mph = pref.getBoolean(MPH, true);
 		dataOptionIntOne = pref.getInt(DATA_OPTION_ONE, TEMPERATURE);
 		dataOptionIntTwo = pref.getInt(DATA_OPTION_TWO, PRECIP_PROBABILITY);
-		
-		boolean shouldUpdate = false;
-		boolean battery = pref.getBoolean(OPTION_BATTERY, true);
-		
-		if (battery && !fromActivity)
-		{
-			long thisTime = System.currentTimeMillis();
-			long lastTime = pref.getLong(PREF_LAST_UPDATE_TIME, ERROR_CODE);
-			long timeElapsed = thisTime - lastTime;
-			if (lastTime == ERROR_CODE || timeElapsed > MINIMUM_UPDATE_MS_BATTERY)
-			{
-				shouldUpdate = true;
-			}
-		}
-		else
-		{
-			shouldUpdate = true;
-		}
+		//shoul
 		
 		ForecastService.Response response = null;
 		if (shouldUpdate)
