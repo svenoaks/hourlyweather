@@ -328,35 +328,51 @@ public class UtilityMethods
 	public static void makeNoConnectionToast(Context context)
 	{
 		Toast.makeText(context,
-				"Problem connecting to services - you must be online.",
+				"Hourly Weather Widget couldn't update - you must be online.",
 				Toast.LENGTH_SHORT).show();
 	}
 
 	public static boolean writeCurrentLocation(LocationClient locationClient,
 			Context context)
 	{
+		boolean successful = false;
 		Location location = getLocationFromLocationClient(locationClient);
 		if (location != null)
 		{
-			writeLatLongFromLocation(location, context);
+			try
+			{
+				writeLatLongFromLocation(location, context);
+				successful = true;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		{
 			location = getLocationFromLocationManager(context);
 		}
-		if (location != null)
+		if (!successful && location != null)
 		{
-			writeLatLongFromLocation(location, context);
+			try
+			{
+				writeLatLongFromLocation(location, context);
+				successful = true;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
-		else
+		if (!successful)
 		{
 			Toast.makeText(
 					context,
-					"You must have location access enabled and be online for Hourly Weather Widget to update. Go to Settings - Location.",
+					"You must have location access enabled and be online for Hourly Weather Widget to update.",
 					Toast.LENGTH_LONG).show();
-			return false;
 		}
-		return true;
+		return successful;
 	}
 
 	private static Location getLocationFromLocationClient(
@@ -379,39 +395,50 @@ public class UtilityMethods
 	}
 
 	public static void writeLatLongFromLocation(Location location,
-			Context context)
+			Context context) throws IOException
 	{
 		Geocoder geo = new Geocoder(context);
 		Address addy = null;
 		String latitude = String.valueOf(location.getLatitude());
 		String longitude = String.valueOf(location.getLongitude());
-		try
+		if (isOnline(context))
 		{
-			List<Address> adds = geo.getFromLocation(location.getLatitude(),
-					location.getLongitude(), 1);
-			if (adds != null && adds.size() > 0)
-				addy = adds.get(0);
-		}
-		catch (IOException e)
-		{
-			List<Address> adds = UtilityMethods.getFromLocation(
-					location.getLatitude(), location.getLongitude(), 1);
-			if (adds != null && adds.size() > 0)
+			try
 			{
-				addy = adds.get(0);
+				List<Address> adds = geo.getFromLocation(location.getLatitude(),
+						location.getLongitude(), 1);
+				if (adds != null && adds.size() > 0)
+					addy = adds.get(0);
+			}
+			catch (IOException e)
+			{
+				List<Address> adds = UtilityMethods.getFromLocation(
+						location.getLatitude(), location.getLongitude(), 1);
+				if (adds != null && adds.size() > 0)
+				{
+					addy = adds.get(0);
+				}
+				else
+				{
+					e.printStackTrace();
+					throw new IOException("Couldn't parse location");
+				}
+			}
+			String locationStr = null;
+			if (addy != null)
+			{
+				locationStr = getLocationString(addy);
 			}
 			else
 			{
-				makeNoConnectionToast(context);
-				e.printStackTrace();
+				throw new IOException("Address couln't be parsed");
 			}
+			writeLatLong(latitude, longitude, locationStr, true, context);
 		}
-		String locationStr = "Location: Unknown";
-		if (addy != null)
+		else
 		{
-			locationStr = getLocationString(addy);
+			throw new IOException("Not Online - couldn't parse location");
 		}
-		writeLatLong(latitude, longitude, locationStr, true, context);
 	}
 
 	@SuppressLint("InlinedApi")

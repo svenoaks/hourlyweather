@@ -395,27 +395,26 @@ containing a value of this type.
         public static final int wind=0x7f020030;
     }
     public static final class id {
-        public static final int action_update=0x7f08001f;
+        public static final int action_update=0x7f08001e;
         public static final int adView=0x7f080005;
         public static final int adView1=0x7f080010;
         public static final int celsius_button=0x7f08000a;
         public static final int check=0x7f080008;
-        public static final int data_option_one=0x7f080017;
+        public static final int data_option_one=0x7f080016;
         public static final int data_option_one_spinner=0x7f08000d;
-        public static final int data_option_two=0x7f080018;
+        public static final int data_option_two=0x7f080017;
         public static final int data_option_two_spinner=0x7f08000e;
         public static final int empty_layout=0x7f080011;
-        public static final int empty_text=0x7f080012;
         public static final int faren_button=0x7f080009;
-        public static final int forecast_dummy=0x7f08001c;
-        public static final int forecast_text=0x7f080014;
-        public static final int help=0x7f080020;
-        public static final int horizontal_layout=0x7f08001e;
-        public static final int hour_divider=0x7f080019;
+        public static final int forecast_dummy=0x7f08001b;
+        public static final int forecast_text=0x7f080013;
+        public static final int help=0x7f08001f;
+        public static final int horizontal_layout=0x7f08001d;
+        public static final int hour_divider=0x7f080018;
         public static final int hybrid=0x7f080004;
-        public static final int image=0x7f080016;
+        public static final int image=0x7f080015;
         public static final int kph_button=0x7f08000c;
-        public static final int location_dummy=0x7f08001b;
+        public static final int location_dummy=0x7f08001a;
         public static final int location_text=0x7f080007;
         public static final int mph_button=0x7f08000b;
         public static final int none=0x7f080000;
@@ -423,11 +422,11 @@ containing a value of this type.
         public static final int satellite=0x7f080002;
         public static final int scroll=0x7f080006;
         public static final int terrain=0x7f080003;
-        public static final int time=0x7f080015;
+        public static final int time=0x7f080014;
         public static final int update_spinner=0x7f08000f;
-        public static final int updates_dummy=0x7f08001d;
-        public static final int updates_text=0x7f080013;
-        public static final int vertical_layout=0x7f08001a;
+        public static final int updates_dummy=0x7f08001c;
+        public static final int updates_text=0x7f080012;
+        public static final int vertical_layout=0x7f080019;
     }
     public static final class layout {
         public static final int activity_configure=0x7f030000;

@@ -181,7 +181,6 @@ public class UpdateService extends IntentService implements GooglePlayServicesCl
 	{
 		RemoteViews rv;
 		rv = new RemoteViews(this.getPackageName(), R.layout.empty_widget);
-		rv.setTextViewText(R.id.empty_text, "Problem retrieving data.");
 		rv.setOnClickPendingIntent(R.id.empty_layout, configurePendingIntent);
 		return rv;
 	}
