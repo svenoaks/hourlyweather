@@ -8,8 +8,8 @@
         android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="ca-app-pub-7592316401695950/8068502623"
         ads:loadAdOnCreate="true"
@@ -17,14 +17,12 @@
 
     <ScrollView
         android:id="@+id/scroll"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/adView"
-        
+        android:layout_alignParentTop="true"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        >
+        android:paddingRight="@dimen/activity_horizontal_margin" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,23 +39,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/bottom_spacing"
-                >
+                android:paddingBottom="@dimen/bottom_spacing" >
 
                 <EditText
                     android:id="@+id/location_text"
                     android:layout_width="match_parent"
+                    android:singleLine="true"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/bottom_spacing"
                     android:hint="Zip or City, State/Country" />
 
-                <CheckBox
-                    android:id="@+id/check"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/bottom_spacing"
-                    android:onClick="checkClick"
-                    android:text="Use my location" />
+                    android:layout_marginTop="@dimen/bottom_spacing" >
+
+                    <CheckBox
+                        android:id="@+id/check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="checkClick"
+                        android:text="Use my location" />
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center"
+                        android:visibility="invisible" />
+                </RelativeLayout>
             </LinearLayout>
 
             <TextView
@@ -87,12 +98,10 @@
                     android:text="Celsius" />
             </RadioGroup>
 
-           
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/bottom_spacing"
-                
                 android:orientation="horizontal" >
 
                 <RadioButton
@@ -126,18 +135,19 @@
                 android:id="@+id/data_option_two_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/bottom_spacing"/>
+                android:layout_marginBottom="@dimen/bottom_spacing" />
+
             <TextView
                 android:id="@+android:id/title"
                 style="?android:attr/listSeparatorTextViewStyle"
                 android:text="Data update frequency" />
+
             <Spinner
                 android:id="@+id/update_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bottom_spacing" />
         </LinearLayout>
-        
     </ScrollView>
 
 </RelativeLayout>

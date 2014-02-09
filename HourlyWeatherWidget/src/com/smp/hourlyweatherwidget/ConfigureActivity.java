@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -35,10 +36,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
+import com.smp.hourlyweatherwidget.GeoCodingAsyncTask.OnGeoCodingCompleteListener;
+import com.smp.hourlyweatherwidget.LocationAsyncTask.OnLocationCompleteListener;
+
 
 public class ConfigureActivity extends FragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener
+		GooglePlayServicesClient.OnConnectionFailedListener, OnLocationCompleteListener, OnGeoCodingCompleteListener
 
 {
 	private static final String[] DATA_OPTIONS =
@@ -53,14 +57,23 @@ public class ConfigureActivity extends FragmentActivity implements
 	protected void onPause()
 	{
 		super.onPause();
+		if (task != null)
+			task.releaseReferences();
+		task = null;
 	}
 
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
+		progressBar.setVisibility(View.INVISIBLE);
 	}
-
+	public interface ContextHoldingAsyncTask
+	{
+		void releaseReferences();
+	}
+	private ProgressBar progressBar;
+	private ContextHoldingAsyncTask task;
 	private LocationClient locationClient;
 	private CheckBox myLocationCheckBox;
 	private EditText locationText;
@@ -90,6 +103,8 @@ public class ConfigureActivity extends FragmentActivity implements
 		dataSpinnerOne = (Spinner) findViewById(R.id.data_option_one_spinner);
 		dataSpinnerTwo = (Spinner) findViewById(R.id.data_option_two_spinner);
 		updateSpinner = (Spinner) findViewById(R.id.update_spinner);
+		progressBar = (ProgressBar) findViewById(R.id.progress);
+
 		setResult(RESULT_CANCELED);
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
@@ -170,8 +185,12 @@ public class ConfigureActivity extends FragmentActivity implements
 
 	public void onCheck()
 	{
-		putPreferences();
-		processLocation();
+		if (task == null)
+		{
+			putPreferences();
+			progressBar.setVisibility(View.VISIBLE);
+			processLocation();
+		}
 	}
 
 	public void putPreferences()
@@ -188,65 +207,7 @@ public class ConfigureActivity extends FragmentActivity implements
 		ed.commit();
 	}
 
-	public void reverseGeocodeText()
-	{
-		String latitude = null, longitude = null, location = "Location: ";
-		String locationEntered = locationText.getText().toString();
-		if (locationEntered.length() == 0)
-		{
-			Toast.makeText(this, "No location entered", Toast.LENGTH_SHORT)
-					.show();
-			return;
-		}
-		Geocoder geo = new Geocoder(this);
-		Address addy = null;
-		if (isOnline(this))
-		{
-			try
-			{	
-				List<Address> adds = geo.getFromLocationName(
-						locationEntered, 1);
-				if (adds != null && adds.size() > 0)
-					addy = adds.get(0);
-			}
-			catch (IOException e)
-			{
-				addy = getLocationInfo(locationEntered);
-				e.printStackTrace();
-				// return;
-			}
-		}
-		else
-		{
-			makeNoConnectionToast(this);
-			return;
-		}
-
-		if (addy != null)
-		{
-			latitude = String.valueOf(addy.getLatitude());
-			longitude = String.valueOf(addy.getLongitude());
-			boolean valid = latitude != null && longitude != null;
-			// if (valid && addy.getSubLocality() != null)
-			// location = addy.getSubLocality();
-			if (valid && ((location = getLocationString(addy)) != null))
-				;
-			else
-			{
-				makeCouldntGeocodeToast();
-				return;
-			}
-		}
-		else
-		{
-			makeCouldntGeocodeToast();
-			return;
-		}
-
-		// write lat, long not using user's location.
-		writeLatLong(latitude, longitude, location, false, this);
-		updateWidgetAndQuit();
-	}
+	
 
 	public void processLocation()
 	{
@@ -266,7 +227,18 @@ public class ConfigureActivity extends FragmentActivity implements
 		}
 		else
 		{
-			reverseGeocodeText();
+			String locationEntered = locationText.getText().toString();
+			if (locationEntered.length() == 0)
+			{
+				Toast.makeText(this, "No location entered", Toast.LENGTH_SHORT)
+						.show();
+				return;
+			}
+			else
+			{
+				task = new GeoCodingAsyncTask(this);
+				((GeoCodingAsyncTask)task).execute(locationEntered);
+			}
 		}
 	}
 
@@ -325,11 +297,8 @@ public class ConfigureActivity extends FragmentActivity implements
 		Toast.makeText(this, "Location could not be determined. Type your city in the text box.",
 				Toast.LENGTH_LONG).show();
 	}
-	private void makeCouldntGeocodeToast()
-	{
-		Toast.makeText(this, "Couldn't determine location. An unknown error has occured.",
-				Toast.LENGTH_LONG).show();
-	}
+
+
 	public void checkClick(View view)
 	{
 		if (myLocationCheckBox.isChecked())
@@ -376,10 +345,8 @@ public class ConfigureActivity extends FragmentActivity implements
 	@Override
 	public void onConnected(Bundle arg0)
 	{
-		if (writeCurrentLocation(locationClient, this))
-		{
-			updateWidgetAndQuit();
-		}
+		task = new LocationAsyncTask(this, locationClient);
+		((LocationAsyncTask)task).execute();
 	}
 
 	@Override
@@ -401,5 +368,43 @@ public class ConfigureActivity extends FragmentActivity implements
 				startActivity(intent);
 		}
 		return true;
+	}
+
+	@Override
+	public void onLocationComplete(boolean success)
+	{
+		if (success)
+			updateWidgetAndQuit();
+		else
+			makeLocationFailedToast();
+
+		progressBar.setVisibility(View.INVISIBLE);
+		task = null;
+
+	}
+
+	public void makeLocationFailedToast()
+	{
+		Toast.makeText(
+				this,
+				"You must have location access enabled and be online.",
+				Toast.LENGTH_LONG).show();
+	}
+	public void makeNoConnectionToast()
+	{
+		Toast.makeText(this,
+				"You must be online.",
+				Toast.LENGTH_SHORT).show();
+	}
+	@Override
+	public void onGeoCodingComplete(boolean success)
+	{
+		if (success)
+			updateWidgetAndQuit();
+		else
+			makeNoConnectionToast();
+		
+		progressBar.setVisibility(View.INVISIBLE);
+		task = null;
 	}
 }

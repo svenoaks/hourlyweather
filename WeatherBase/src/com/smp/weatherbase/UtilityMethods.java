@@ -325,12 +325,7 @@ public class UtilityMethods
 		return location;
 	}
 
-	public static void makeNoConnectionToast(Context context)
-	{
-		Toast.makeText(context,
-				"Hourly Weather Widget couldn't update - you must be online.",
-				Toast.LENGTH_SHORT).show();
-	}
+	
 
 	public static boolean writeCurrentLocation(LocationClient locationClient,
 			Context context)
@@ -365,21 +360,19 @@ public class UtilityMethods
 				e.printStackTrace();
 			}
 		}
-		if (!successful)
-		{
-			Toast.makeText(
-					context,
-					"You must have location access enabled and be online for Hourly Weather Widget to update.",
-					Toast.LENGTH_LONG).show();
-		}
+
 		return successful;
 	}
 
 	private static Location getLocationFromLocationClient(
 			LocationClient locationClient)
 	{
-		Location location = locationClient.getLastLocation();
-		locationClient.disconnect();
+		Location location = null;
+		if (locationClient != null)
+		{
+			location = locationClient.getLastLocation();
+			locationClient.disconnect();
+		}
 		return location;
 	}
 
